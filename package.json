@@ -1,15 +1,16 @@
 {
   "name": "tiktok-live-temple-rpc",
   "version": "1.0.0",
-  "description": "TikTok Live RPC Interactive Buddhist Temple (Bun.js + ZeroTTS giọng Mai Chi)",
+  "description": "TikTok Live RPC Interactive Buddhist Temple (Node.js/Bun.js + Dual Edge TTS / ZeroTTS)",
   "main": "server.js",
   "scripts": {
-    "start": "bun run server.js",
-    "dev": "bun --watch server.js"
+    "start": "node server.js",
+    "dev": "node --watch server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "msedge-tts": "^2.1.1",
     "tiktok-live-connector": "^2.1.0",
     "ws": "^8.18.0"
   }

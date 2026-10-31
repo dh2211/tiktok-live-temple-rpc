@@ -43,6 +43,34 @@ body.obs-mode .app-workspace {
 body.obs-mode .quick-dock {
   display: none !important;
 }
+body.obs-mode .ritual-hotspot {
+  display: none !important;
+}
+
+.devotee-sprite.master-glow {
+  filter: drop-shadow(0 0 14px rgba(255, 215, 0, 0.95)) drop-shadow(0 0 28px rgba(255, 170, 0, 0.65));
+}
+
+@keyframes skinSparkle {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.15); filter: brightness(1.7) drop-shadow(0 0 20px #ffd700); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.skin-changing {
+  animation: skinSparkle 0.85s ease-out;
+}
+
+@keyframes hallSeatBow {
+  0% { transform: scale(1) translateY(0); }
+  35% { transform: scale(0.97, 0.86) translateY(12px); }
+  65% { transform: scale(0.97, 0.86) translateY(12px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+.seat-bowing .devotee-sprite {
+  animation: hallSeatBow 1.1s ease-in-out !important;
+}
 
 /* ==========================================================================
    KHUNG 9:16 CHUẨN TIKTOK LIVE (1080 x 1920 LOGICAL) — TỐI ƯU HÓA GPU COMPOSITOR
