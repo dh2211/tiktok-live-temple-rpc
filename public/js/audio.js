@@ -12,9 +12,9 @@ class TempleAudioEngine {
     this.sfxEnabled = true;
     this.bgMusicEnabled = true;
     this.ttsEnabled = true;
-    this.ttsVoice = 'maichi';
+    this.ttsVoice = 'vi-VN-NamMinhNeural';
 
-    // Nhạc nền "Nam Mô A Di Đà Phật.m4a" — mặc định 65%, cho phép chỉnh trực tiếp 0% - 100%
+    // Nhạc nền Phật giáo — mặc định 65%, cho phép chỉnh trực tiếp 0% - 100%
     const savedMusicVol = parseFloat(localStorage.getItem('temple_music_vol'));
     const savedTtsVol = parseFloat(localStorage.getItem('temple_tts_vol'));
     this.bgBaseVolume = Number.isFinite(savedMusicVol) ? Math.max(0, Math.min(1, savedMusicVol)) : 0.65;
@@ -22,12 +22,15 @@ class TempleAudioEngine {
 
     this.useSynthMusicFallback = false;
     this.synthBgTimer = null;
-    this.bgAudio = new Audio('/assets/bg_chant.m4a');
+    this.bgAudio = new Audio('/assets/music1.mp3');
     this.bgAudio.loop = true;
     this.bgAudio.preload = 'auto';
     this.bgAudio.volume = this.bgBaseVolume;
     this.bgAudio.onerror = () => {
-      this.useSynthMusicFallback = true;
+      this.bgAudio = new Audio('/assets/bg_chant.m4a');
+      this.bgAudio.onerror = () => {
+        this.useSynthMusicFallback = true;
+      };
     };
     this.ttsQueue = [];
     this.ttsPlaying = false;
@@ -318,7 +321,8 @@ class TempleAudioEngine {
     const item = {
       id: `tts_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
       text: clean,
-      voice: (options.voice || this.ttsVoice || 'maichi').toLowerCase(),
+      voice: options.voice || this.ttsVoice || 'vi-VN-NamMinhNeural',
+      engine: options.engine || 'edge',
       url: options.url || null,
       onStart,
       onEnd,
@@ -326,25 +330,25 @@ class TempleAudioEngine {
     };
 
     if (!item.url) {
-      item.fetchPromise = this.fetchZeroTtsAudio(item.text, item.voice);
+      item.fetchPromise = this.fetchZeroTtsAudio(item.text, item.voice, item.engine);
     }
 
     this.ttsQueue.push(item);
     this.processTtsQueue();
   }
 
-  async fetchZeroTtsAudio(text, voice = 'maichi') {
+  async fetchZeroTtsAudio(text, voice = 'vi-VN-NamMinhNeural', engine = 'edge') {
     try {
       const res = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, voice })
+        body: JSON.stringify({ text, voice, engine })
       });
       const data = await res.json();
       if (data && data.ok && data.url) {
         return data;
       }
-      return { ok: false, error: data?.error || 'ZeroTTS unavailable' };
+      return { ok: false, error: data?.error || 'TTS unavailable' };
     } catch (err) {
       return { ok: false, error: err.message };
     }

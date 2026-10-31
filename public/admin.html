@@ -3,39 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bảng Điều Khiển JSON-RPC 2.0 — Chùa Linh Ứng TikTok Live</title>
+  <title>Bảng Điều Khiển & Giả Lập Live — Chùa Linh Ứng TikTok Live RPC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=Noto+Serif:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Noto+Serif:wght@700;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #120504;
-      --card: #210906;
+      --card: #1f0a07;
+      --card2: #2a0f0b;
       --border: rgba(244, 193, 80, 0.38);
       --gold: #f4c150;
       --gold-light: #ffe694;
       --text: #fff8eb;
       --muted: #d6ba8a;
+      --green: #2e7d32;
+      --red: #c62828;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: radial-gradient(circle at 50% 0%, #330c08 0%, #100302 80%);
+      background: radial-gradient(circle at 50% 0%, #360d09 0%, #100302 80%);
       color: var(--text);
       font-family: 'Be Vietnam Pro', sans-serif;
       min-height: 100vh;
-      padding: 28px;
+      padding: 24px;
     }
     .container {
-      max-width: 1280px;
+      max-width: 1320px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 20px;
     }
     .top-bar {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
+      gap: 16px;
       background: var(--card);
       border: 1.5px solid var(--border);
       border-radius: 18px;
@@ -43,86 +48,174 @@
     }
     .top-title {
       font-family: 'Noto Serif', serif;
-      font-size: 26px;
+      font-size: 24px;
       color: var(--gold-light);
     }
     .top-sub {
-      font-size: 14px;
+      font-size: 13.5px;
       color: var(--muted);
       margin-top: 4px;
     }
     .top-links {
       display: flex;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
     .btn {
       cursor: pointer;
       border: 1px solid var(--border);
       background: linear-gradient(180deg, #6b140e 0%, #3d0906 100%);
       color: var(--gold-light);
-      padding: 10px 16px;
-      border-radius: 10px;
+      padding: 9px 15px;
+      border-radius: 9px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13.5px;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn:hover {
+      border-color: var(--gold);
+      transform: translateY(-1px);
     }
     .btn.gold {
       background: linear-gradient(180deg, #f4c150 0%, #c48312 100%);
       color: #1f0604;
       border-color: #fff3b0;
     }
+    .btn.green {
+      background: linear-gradient(180deg, #388e3c 0%, #1b5e20 100%);
+      color: #fff;
+      border-color: #81c784;
+    }
+    .btn.red {
+      background: linear-gradient(180deg, #d32f2f 0%, #8e0000 100%);
+      color: #fff;
+      border-color: #ef9a9a;
+    }
     .grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
       gap: 20px;
     }
     .card {
       background: var(--card);
       border: 1.5px solid var(--border);
-      border-radius: 18px;
-      padding: 20px;
+      border-radius: 16px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
     .card h2 {
-      font-size: 18px;
+      font-size: 16.5px;
       color: var(--gold-light);
       border-bottom: 1px solid rgba(244, 193, 80, 0.2);
-      padding-bottom: 10px;
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .row {
       display: flex;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .row > * {
+      flex: 1;
+      min-width: 0;
+    }
+    .row.tight > * {
+      flex: 0 0 auto;
+    }
+    label {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
     input, select, textarea {
       width: 100%;
-      background: #120403;
+      background: #100302;
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
+      border-radius: 9px;
+      padding: 9px 12px;
       color: var(--text);
       font-family: inherit;
-      font-size: 14px;
+      font-size: 13.5px;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 8px rgba(244, 193, 80, 0.3);
     }
     .action-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 8px;
+    }
+    .skin-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--card2);
+      border: 1px solid var(--border);
+    }
+    .chip.ok {
+      border-color: #66bb6a;
+      color: #a5d6a7;
+    }
+    .chip.bad {
+      border-color: #ef5350;
+      color: #ef9a9a;
+    }
+    .table-container {
+      max-height: 280px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #0d0302;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    th, td {
+      padding: 7px 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(244, 193, 80, 0.12);
+    }
+    th {
+      background: #1a0805;
+      color: var(--gold);
+      position: sticky;
+      top: 0;
+    }
+    tr:hover {
+      background: rgba(244, 193, 80, 0.05);
     }
     pre {
-      background: #0b0202;
+      background: #0a0201;
       border: 1px solid rgba(244, 193, 80, 0.25);
       border-radius: 10px;
       padding: 12px;
-      font-size: 12.5px;
+      font-size: 12px;
       color: #9ef0c0;
       overflow-x: auto;
-      max-height: 280px;
+      max-height: 220px;
     }
   </style>
 </head>
@@ -130,8 +223,8 @@
   <div class="container">
     <header class="top-bar">
       <div>
-        <div class="top-title">🪷 BẢNG ĐIỀU KHIỂN CHÙA ONLINE TIKTOK LIVE RPC (BUN.JS + ZEROTTS MAI CHI)</div>
-        <div class="top-sub" id="statusBanner">Đang tải trạng thái hệ thống...</div>
+        <div class="top-title">🪷 BẢNG ĐIỀU KHIỂN & GIẢ LẬP LIVE · CHÙA LINH ỨNG TIKTOK LIVE RPC</div>
+        <div class="top-sub" id="statusBanner">Đang kết nối hệ thống...</div>
       </div>
       <div class="top-links">
         <a class="btn" href="/?obs=1" target="_blank">📺 Mở Màn Hình OBS 9:16 Sạch (?obs=1)</a>
@@ -140,104 +233,338 @@
     </header>
 
     <div class="grid">
+      <!-- 1. KẾT NỐI TIKTOK LIVE -->
       <section class="card">
-        <h2>📡 1. Kết Nối Phòng TikTok Live & Giọng Đọc ZeroTTS (Mai Chi)</h2>
-        <div class="row">
-          <input type="text" id="ttUser" placeholder="Nhập @username TikTok đang phát Live..." />
-          <button class="btn gold" id="btnConn">Kết Nối Live</button>
-          <button class="btn" id="btnDisc">Ngắt</button>
-        </div>
-        <div class="row">
-          <input type="text" id="ttsDirectText" value="Nam mô A Di Đà Phật. Chùa Linh Ứng Online xin kính chào quý thí chủ thập phương." />
-          <button class="btn gold" id="btnSpeakMaiChi">🎙️ Đọc thử Giọng Mai Chi</button>
-        </div>
-        <audio id="adminAudioPreview" controls style="width: 100%; height: 38px;"></audio>
-      </section>
-
-      <section class="card">
-        <h2>🙏 2. Gửi Lệnh Tương Tác JSON-RPC 2.0</h2>
-        <div class="row">
-          <input type="text" id="rpcUser" value="Đại Thí Chủ Minh Tâm" placeholder="Tên người xem..." />
-          <input type="text" id="rpcWish" value="Cầu gia đạo bình an, tài lộc vượng phát" placeholder="Lời cầu nguyện..." />
-        </div>
-        <div class="action-grid">
-          <button class="btn gold" onclick="sendRpc('temple.burnIncense', { count: 3 })">🔥 Thắp 3 Nén Hương</button>
-          <button class="btn" onclick="sendRpc('temple.sendPrayer', {})">🏮 Thả Đèn Hoa Đăng</button>
-          <button class="btn" onclick="sendRpc('temple.strikeWoodenFish', { count: 9 })">🪵 Gõ Mõ 9 Nhịp</button>
-          <button class="btn" onclick="sendRpc('temple.ringBell', { count: 1, readTts: true })">🔔 Thỉnh Đại Hồng Chung</button>
-          <button class="btn" onclick="sendRpc('temple.drawFortune', {})">🎋 Xin Xăm / Gieo Quẻ</button>
-          <button class="btn" onclick="sendRpc('temple.offerGift', { giftType: 'fruit', coins: 30, giftName: 'Mâm Ngũ Quả Cát Tường' })">🍑 Dâng Mâm Ngũ Quả</button>
-          <button class="btn gold" onclick="sendRpc('temple.grandCeremony', { coins: 500, giftName: 'Đại Lễ Kim Long Chầu Phật' })">🐉 Đại Lễ Kim Long</button>
-          <button class="btn" onclick="sendRpc('temple.resetMerit', {})">♻️ Đặt Lại Bảng Công Đức</button>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>💬 3. Giả Lập Bình Luận Người Xem TikTok</h2>
-        <div class="row">
-          <input type="text" id="simComment" value="Con xin gieo quẻ cầu tài lộc đầu tháng ạ" placeholder="Nhập nội dung bình luận TikTok..." />
-          <button class="btn gold" id="btnSendComment">Gửi Comment</button>
-        </div>
-        <p style="font-size: 13px; color: var(--muted);">
-          Từ khóa tự động nhận diện: <code>thắp hương</code>, <code>bái phật</code>, <code>cầu ...</code>, <code>xin xăm / gieo quẻ</code>, <code>thỉnh chuông</code>, <code>gõ mõ</code>.
+        <h2>
+          <span>📡 1. Kết Nối TikTok LIVE</span>
+          <span class="chip" id="ttChip">Chưa kết nối</span>
+        </h2>
+        <label>
+          Tên kênh hoặc link phòng TikTok Live
+          <div class="row">
+            <input type="text" id="ttUser" value="@zenfacts_vn" placeholder="@username hoặc link..." />
+            <button class="btn gold" id="btnConn" style="flex:0 0 95px">Kết Nối</button>
+            <button class="btn" id="btnDisc" style="flex:0 0 70px">Ngắt</button>
+          </div>
+        </label>
+        <p style="font-size: 12px; color: var(--muted);">
+          Chỉ đọc sự kiện công khai (chat, quà, tim). Không yêu cầu mật khẩu hay cookie. Bật LIVE trên TikTok trước rồi kết nối.
         </p>
       </section>
 
+      <!-- 2. MOCK BOT SIMULATOR (15 - 40 PHẬT TỬ TRÊN BỒ ĐOÀN) -->
       <section class="card">
-        <h2>🔌 4. Nhật Ký Phản Hồi JSON-RPC 2.0 (`/rpc`)</h2>
-        <pre id="rpcOutput">{ "status": "Sẵn sàng nhận lệnh JSON-RPC 2.0" }</pre>
+        <h2>
+          <span>🤖 2. Giả Lập Phật Tử (15 - 40 Chỗ)</span>
+          <span class="chip ok" id="devoteeCountChip">0 Phật Tử</span>
+        </h2>
+        <div class="row">
+          <label>
+            Số lượng bồ đoàn muốn đổ
+            <select id="selectBotCount">
+              <option value="15">15 Phật Tử (Xem trước)</option>
+              <option value="25" selected>25 Phật Tử (Đạo tràng ấm cúng)</option>
+              <option value="40">40 Phật Tử (Kín bồ đoàn hai bên)</option>
+            </select>
+          </label>
+          <label>
+            Nhịp độ hoạt động
+            <select id="selectBotPace">
+              <option value="slow">Chậm (5s/lần)</option>
+              <option value="mid" selected>Vừa (2.8s/lần)</option>
+              <option value="fast">Nhanh (1.2s/lần)</option>
+            </select>
+          </label>
+        </div>
+        <div class="row">
+          <button class="btn gold" id="btnFillDemo">👥 Đổ Phật Tử Lên Đệm</button>
+          <button class="btn" id="btnToggleBots">⚡ Bật Bot Giả Lập</button>
+          <button class="btn red" id="btnClearSeats">🧹 Làm Trống Bồ Đoàn</button>
+        </div>
+        <p style="font-size: 12px; color: var(--muted);">
+          Tạo trước 15-40 Phật tử với trang phục đa dạng (nam, nữ, sư, ni, tiểu, bà) để Captain kiểm tra giao diện trước khi phát live thật.
+        </p>
+      </section>
+
+      <!-- 3. THỬ ĐỔI Y PHỤC (SKIN DIVERSITY) -->
+      <section class="card">
+        <h2>👘 3. Thử Đổi Y Phục Phật Tử (Skin Keywords)</h2>
+        <div class="row">
+          <label>
+            Tên thí chủ cần đổi y phục
+            <input type="text" id="skinUser" value="Minh Tâm" placeholder="Tên thí chủ..." />
+          </label>
+        </div>
+        <div class="skin-chips" style="margin-top: 4px;">
+          <button class="btn skin-quick" data-kw="nam">👨 Nam</button>
+          <button class="btn skin-quick" data-kw="nữ">👩 Nữ</button>
+          <button class="btn skin-quick" data-kw="sư">🧘‍♂️ Sư Thầy</button>
+          <button class="btn skin-quick" data-kw="ni">🧕 Sư Cô</button>
+          <button class="btn skin-quick" data-kw="tiểu">👦 Chú Tiểu</button>
+          <button class="btn skin-quick" data-kw="bà">👵 Cụ Bà</button>
+          <button class="btn gold skin-quick" data-kw="cao tăng">👑 Cao Tăng</button>
+        </div>
+        <p style="font-size: 12px; color: var(--muted);">
+          Từ khóa chuẩn (≤ 3 từ): <code>nam</code>, <code>nữ</code>, <code>sư / thầy</code>, <code>ni / sư cô</code>, <code>tiểu</code>, <code>bà</code>, <code>cao tăng</code>. "Nam mô A Di Đà Phật" sẽ không kích hoạt đổi thành nam.
+        </p>
+      </section>
+
+      <!-- 4. DUAL TTS ENGINE CONFIGURATION -->
+      <section class="card">
+        <h2>
+          <span>🎙️ 4. Giọng Đọc Khấn (Dual TTS Engine)</span>
+          <span class="chip ok" id="ttsChip">Edge TTS: Sẵn sàng</span>
+        </h2>
+        <div class="row">
+          <label>
+            Động cơ TTS
+            <select id="ttsEngineSelect">
+              <option value="edge" selected>Microsoft Edge TTS (Siêu nhẹ, không cần GPU)</option>
+              <option value="zerotts">ZeroTTS (Python worker · zeroweight-ai)</option>
+            </select>
+          </label>
+          <label>
+            Giọng đọc
+            <select id="ttsVoiceSelect">
+              <option value="vi-VN-NamMinhNeural" selected>vi-VN-NamMinhNeural (Nam Minh · Trầm ấm trang nghiêm)</option>
+              <option value="vi-VN-HoaiMyNeural">vi-VN-HoaiMyNeural (Hoài My · Trong trẻo dịu dàng)</option>
+              <option value="maichi">maichi (Mai Chi · ZeroTTS)</option>
+            </select>
+          </label>
+        </div>
+        <div class="row">
+          <input type="text" id="ttsCustomText" value="Nam mô A Di Đà Phật. Kính chúc quý Phật tử thân tâm an lạc, vạn sự cát tường như ý." />
+          <button class="btn gold" id="btnSpeak" style="flex:0 0 110px">🎙️ Đọc Thử</button>
+        </div>
+        <audio id="adminAudioPreview" controls style="width: 100%; height: 36px; margin-top: 4px;"></audio>
+      </section>
+
+      <!-- 5. THỬ NGHIỆM TƯƠNG TÁC LIVE (LIVE TESTER) -->
+      <section class="card">
+        <h2>🙏 5. Thử Nghiệm Tương Tác & Lễ Bái (Live Tester)</h2>
+        <div class="row">
+          <label>
+            Tên người xem
+            <input type="text" id="rpcUser" value="Diệu Hạnh" placeholder="Tên..." />
+          </label>
+          <label>
+            Lời cầu nguyện
+            <input type="text" id="rpcWish" value="Cầu gia đạo bình an, tai qua nạn khỏi, tài lộc hanh thông" placeholder="Lời nguyện..." />
+          </label>
+        </div>
+        <div class="action-grid">
+          <button class="btn gold" onclick="sendRpc('temple.burnIncense', { count: 3 })">🔥 Thắp 3 Nén Hương</button>
+          <button class="btn" onclick="sendRpc('temple.sendPrayer', {})">🏮 Thả Hoa Đăng</button>
+          <button class="btn" onclick="sendRpc('temple.strikeWoodenFish', { count: 9 })">🪵 Gõ Mõ 9 Nhịp</button>
+          <button class="btn" onclick="sendRpc('temple.ringBell', { count: 1, readTts: true })">🔔 Thỉnh Đại Hồng Chung</button>
+          <button class="btn" onclick="sendRpc('temple.drawFortune', {})">🎋 Xin Xăm / Gieo Quẻ</button>
+          <button class="btn" onclick="sendRpc('temple.offerGift', { giftType: 'fruit', coins: 30, giftName: 'Mâm Ngũ Quả Cát Tường' })">🍑 Dâng Ngũ Quả</button>
+          <button class="btn" onclick="sendRpc('temple.offerGift', { giftType: 'lotus', coins: 20, giftName: 'Đài Hoa Sen Vàng' })">🪷 Dâng Hoa Sen</button>
+          <button class="btn gold" onclick="sendRpc('temple.grandCeremony', { coins: 500, giftName: 'Đại Lễ Kim Long Chầu Phật' })">🐉 Đại Lễ Kim Long</button>
+        </div>
+        <div class="row" style="margin-top: 6px;">
+          <input type="text" id="simComment" value="Con xin gieo một quẻ cầu bình an may mắn ạ" placeholder="Bình luận giả lập..." />
+          <button class="btn gold" id="btnSendComment" style="flex:0 0 120px">Gửi Comment</button>
+        </div>
+      </section>
+
+      <!-- 6. DANH SÁCH PHẬT TỬ TRONG SÂN CHÙA -->
+      <section class="card">
+        <h2>
+          <span>👥 6. Danh Sách Phật Tử Trong Sân Chùa</span>
+          <button class="btn" id="btnRefreshList" style="padding: 4px 10px; font-size: 12px;">Làm mới</button>
+        </h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 40px;">#</th>
+                <th>Phật Tử</th>
+                <th>Y Phục</th>
+                <th>Công Đức</th>
+                <th>Lời Cầu Nguyện Gần Nhất</th>
+              </tr>
+            </thead>
+            <tbody id="tableDevotees">
+              <tr><td colspan="5" style="text-align: center; color: var(--muted);">Đang tải dữ liệu...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </section>
     </div>
+
+    <!-- 7. NHẬT KÝ PHẢN HỒI JSON-RPC 2.0 -->
+    <section class="card">
+      <h2>🔌 7. Nhật Ký Phản Hồi JSON-RPC 2.0 (`/rpc`)</h2>
+      <pre id="rpcOutput">{ "status": "Hệ thống sẵn sàng nhận lệnh JSON-RPC 2.0" }</pre>
+    </section>
   </div>
 
   <script>
+    const $ = (id) => document.getElementById(id);
+    let botsActive = false;
+
     async function sendRpc(method, extraParams = {}) {
-      const user = document.getElementById('rpcUser').value.trim() || 'Thí Chủ';
-      const wish = document.getElementById('rpcWish').value.trim();
+      const user = $('rpcUser').value.trim() || 'Thí Chủ';
+      const wish = $('rpcWish').value.trim();
       const body = {
         jsonrpc: '2.0',
         id: Date.now(),
         method,
         params: { user, wish, ...extraParams }
       };
-      const res = await fetch('/rpc', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      const data = await res.json();
-      document.getElementById('rpcOutput').textContent = JSON.stringify(data, null, 2);
-      refreshStatus();
-      return data;
+      try {
+        const res = await fetch('/rpc', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        $('rpcOutput').textContent = JSON.stringify(data, null, 2);
+        refreshStatus();
+        return data;
+      } catch (err) {
+        $('rpcOutput').textContent = JSON.stringify({ error: err.message }, null, 2);
+      }
     }
 
-    document.getElementById('btnConn').onclick = () => {
-      const username = document.getElementById('ttUser').value.trim();
+    $('btnConn').onclick = () => {
+      const username = $('ttUser').value.trim();
       sendRpc('live.connect', { username });
     };
-    document.getElementById('btnDisc').onclick = () => sendRpc('live.disconnect', {});
-    document.getElementById('btnSendComment').onclick = () => {
-      const comment = document.getElementById('simComment').value.trim();
+
+    $('btnDisc').onclick = () => sendRpc('live.disconnect', {});
+
+    $('btnFillDemo').onclick = () => {
+      const count = Number($('selectBotCount').value) || 25;
+      sendRpc('temple.fillBots', { count });
+    };
+
+    $('btnToggleBots').onclick = () => {
+      botsActive = !botsActive;
+      const count = Number($('selectBotCount').value) || 25;
+      const pace = $('selectBotPace').value || 'mid';
+      sendRpc('temple.setBots', { enabled: botsActive, count, pace });
+      $('btnToggleBots').textContent = botsActive ? '⏹️ Tắt Bot Giả Lập' : '⚡ Bật Bot Giả Lập';
+      $('btnToggleBots').className = botsActive ? 'btn red' : 'btn';
+    };
+
+    $('btnClearSeats').onclick = () => {
+      botsActive = false;
+      $('btnToggleBots').textContent = '⚡ Bật Bot Giả Lập';
+      $('btnToggleBots').className = 'btn';
+      sendRpc('temple.clearBots', {});
+    };
+
+    document.querySelectorAll('.skin-quick').forEach((btn) => {
+      btn.onclick = () => {
+        const kw = btn.getAttribute('data-kw');
+        const user = $('skinUser').value.trim() || 'Minh Tâm';
+        sendRpc('temple.comment', { comment: kw, user });
+      };
+    });
+
+    $('btnSendComment').onclick = () => {
+      const comment = $('simComment').value.trim();
       sendRpc('temple.comment', { comment });
     };
-    document.getElementById('btnSpeakMaiChi').onclick = async () => {
-      const text = document.getElementById('ttsDirectText').value.trim();
-      const data = await sendRpc('temple.speak', { text, voice: 'maichi', broadcast: true });
+
+    $('btnSpeak').onclick = async () => {
+      const text = $('ttsCustomText').value.trim();
+      const voice = $('ttsVoiceSelect').value;
+      const engine = $('ttsEngineSelect').value;
+      const data = await sendRpc('temple.speak', { text, voice, engine, broadcast: true });
       if (data?.result?.url) {
-        const player = document.getElementById('adminAudioPreview');
+        const player = $('adminAudioPreview');
         player.src = data.result.url;
         player.play().catch(() => {});
       }
     };
 
+    $('ttsVoiceSelect').onchange = (e) => {
+      sendRpc('temple.updateSettings', { ttsVoice: e.target.value });
+    };
+
+    $('ttsEngineSelect').onchange = (e) => {
+      sendRpc('temple.updateSettings', { ttsEngine: e.target.value });
+    };
+
+    $('btnRefreshList').onclick = () => refreshStatus();
+
+    const SKIN_NAMES = {
+      man: '👨 Nam',
+      woman: '👩 Nữ',
+      monk: '🧘‍♂️ Sư Thầy',
+      nun: '🧕 Sư Cô',
+      child: '👦 Chú Tiểu',
+      granny: '👵 Cụ Bà',
+      master: '👑 Cao Tăng'
+    };
+
     async function refreshStatus() {
-      const res = await fetch('/api/state');
-      const st = await res.json();
-      document.getElementById('statusBanner').textContent =
-        `Hương đã thắp: ${st.totalIncense} | Tổng Công Đức: ${st.totalMerit} | ZeroTTS: ${st.tts?.status} (Giọng: ${st.tts?.voice})`;
+      try {
+        const res = await fetch('/api/state');
+        const st = await res.json();
+
+        // 1. Top banner
+        $('statusBanner').textContent =
+          `🔥 Hương: ${st.totalIncense} | ✨ Công Đức: ${st.totalMerit.toLocaleString()} | 🪵 Mõ: ${st.woodenFishHits} | 🔔 Chuông: ${st.bellRings} | 🎋 Quẻ: ${st.fortuneCount}`;
+
+        // 2. TikTok status chip
+        const tt = st.tiktok || {};
+        const ttChip = $('ttChip');
+        if (tt.connected) {
+          ttChip.textContent = `Đã kết nối: @${tt.username} (${tt.viewerCount} xem)`;
+          ttChip.className = 'chip ok';
+        } else if (tt.connecting) {
+          ttChip.textContent = `Đang kết nối @${tt.username}...`;
+          ttChip.className = 'chip';
+        } else if (tt.lastError) {
+          ttChip.textContent = `Lỗi: ${tt.lastError.slice(0, 24)}...`;
+          ttChip.className = 'chip bad';
+        } else {
+          ttChip.textContent = 'Chưa kết nối';
+          ttChip.className = 'chip';
+        }
+
+        // 3. Seated count
+        const devotees = st.leaderboard || [];
+        $('devoteeCountChip').textContent = `${devotees.length} Phật Tử`;
+
+        // 4. TTS chip
+        const tts = st.tts || {};
+        $('ttsChip').textContent = `${tts.engine || 'Edge TTS'} (${tts.voice || 'vi-VN-NamMinhNeural'})`;
+
+        // 5. Table
+        const tbody = $('tableDevotees');
+        if (!devotees.length) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted); padding: 18px;">Chưa có Phật tử trên bồ đoàn. Bấm "Đổ Phật Tử Lên Đệm" để xem trước!</td></tr>';
+        } else {
+          tbody.innerHTML = devotees.map((d, idx) => `
+            <tr>
+              <td><strong>${idx + 1}</strong></td>
+              <td><strong>${escapeHtml(d.name)}</strong></td>
+              <td><span class="chip">${SKIN_NAMES[d.skin] || d.skin || 'Phật tử'}</span></td>
+              <td style="color: var(--gold); font-weight: 700;">+${d.merit}</td>
+              <td style="color: var(--muted);">${escapeHtml(d.lastWish || 'Dâng hương bái Phật')}</td>
+            </tr>
+          `).join('');
+        }
+      } catch (_) {}
     }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[c]));
+    }
+
     refreshStatus();
-    setInterval(refreshStatus, 4000);
+    setInterval(refreshStatus, 3500);
   </script>
 </body>
 </html>

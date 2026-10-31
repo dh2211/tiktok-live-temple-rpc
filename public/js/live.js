@@ -78,7 +78,27 @@
     particles.setIncenseTips(tips);
   }
 
-  // 4. Dựng Hàng 6 Đệm Quỳ VIP (Top 6 Thí Chủ trên bục gỗ y=1188)
+  // 4. Character Sprites & Skins (Hợp nhất từ Chánh Điện Online)
+  const SKIN_SPRITES = {
+    child: '/assets/c_child.png',
+    granny: '/assets/c_granny.png',
+    man: '/assets/c_man.png',
+    monk: '/assets/c_monk.png',
+    nun: '/assets/c_nun.png',
+    woman: '/assets/c_woman.png',
+    master: '/assets/c_monk.png'
+  };
+
+  function getSkinSpriteUrl(skin) {
+    return SKIN_SPRITES[skin] || '/assets/c_man.png';
+  }
+
+  Object.values(SKIN_SPRITES).forEach((url) => {
+    const img = new Image();
+    img.src = url;
+  });
+
+  // Hàng 6 Đệm Quỳ VIP (Top 6 Thí Chủ trên bục gỗ y=1188)
   const VIP_CUSHION_COORDS = [
     { x: 140, y: 1188, rank: 1 },
     { x: 268, y: 1188, rank: 2 },
@@ -95,9 +115,12 @@
     layer.innerHTML = VIP_CUSHION_COORDS.map((slot, idx) => {
       const dev = leaderboard[idx];
       if (!dev) return '';
+      const skin = dev.skin || 'monk';
+      const spriteUrl = getSkinSpriteUrl(skin);
+      const isMaster = skin === 'master';
       return `
-        <div class="vip-devotee-slot" style="left: ${slot.x}px; top: ${slot.y}px; z-index: ${12 + idx};">
-          <img src="/assets/devotee.png" alt="VIP Devotee" class="devotee-sprite" />
+        <div class="vip-devotee-slot" data-user="${escapeHtml(dev.name)}" style="left: ${slot.x}px; top: ${slot.y}px; z-index: ${12 + idx};">
+          <img src="${spriteUrl}" alt="VIP Devotee" class="devotee-sprite ${isMaster ? 'master-glow' : ''}" />
           <div class="vip-rank-pill">
             <span class="vip-rank-num">${slot.rank}</span>
             <span class="vip-rank-name">${escapeHtml(shortenName(dev.name, 12))}</span>
@@ -140,28 +163,34 @@
   })();
 
   let lastRenderedLeaderboardJson = '';
+  const DEFAULT_CYCLE = ['man', 'woman', 'woman', 'man', 'granny', 'monk', 'nun', 'child'];
 
   function renderCongregationHall(leaderboard = []) {
     if (!congregationHall) return;
-    // Những người xếp từ hạng 7 trở đi ngồi ở các vị trí đầu tiên cạnh thảm đỏ
     const hallViewers = leaderboard.slice(6);
-    const sig = JSON.stringify(hallViewers.map((d) => `${d.name}:${d.merit}`));
+    const sig = JSON.stringify(hallViewers.map((d) => `${d.name}:${d.merit}:${d.skin}`));
     if (sig === lastRenderedLeaderboardJson && congregationHall.children.length > 0) return;
     lastRenderedLeaderboardJson = sig;
 
-    // Ưu tiên gắn thẻ tên vào các ghế gần thảm đỏ dễ nhìn nhất
-    const labeledSeatIndices = [
-      3, 4, 11, 12, 19, 20, 27, 28, 35, 36, 2, 5, 10, 13, 18, 21, 26, 29
+    const aislePriorityIndices = [
+      3, 4, 11, 12, 19, 20, 27, 28, 35, 36,
+      2, 5, 10, 13, 18, 21, 26, 29, 34, 37,
+      1, 6, 9, 14, 17, 22, 25, 30, 33, 38,
+      0, 7, 8, 15, 16, 23, 24, 31, 32, 39
     ];
     const seatViewerMap = new Map();
     hallViewers.forEach((viewer, idx) => {
-      if (idx < labeledSeatIndices.length) {
-        seatViewerMap.set(labeledSeatIndices[idx], viewer);
+      if (idx < aislePriorityIndices.length) {
+        seatViewerMap.set(aislePriorityIndices[idx], viewer);
       }
     });
 
     congregationHall.innerHTML = HALL_SEAT_COORDS.map((seat, idx) => {
       const viewer = seatViewerMap.get(idx);
+      const skin = viewer?.skin || DEFAULT_CYCLE[idx % DEFAULT_CYCLE.length];
+      const spriteUrl = getSkinSpriteUrl(skin);
+      const isMaster = skin === 'master';
+
       const badgeHtml = viewer
         ? `
           <div class="seat-badge">
@@ -179,12 +208,13 @@
         <div
           class="hall-seat"
           data-seat-idx="${idx}"
+          data-user="${escapeHtml(viewer?.name || '')}"
           style="left: ${seat.x}px; top: ${seat.y}px; z-index: ${20 + seat.row * 2}; transform: translate(-50%, -100%) scale(${seat.scale});"
         >
           <img
-            src="/assets/devotee.png"
+            src="${spriteUrl}"
             alt="Phật tử"
-            class="devotee-sprite"
+            class="devotee-sprite ${isMaster ? 'master-glow' : ''}"
             style="animation-delay: ${((idx * 0.27) % 3.5).toFixed(2)}s;"
           />
           ${badgeHtml}
@@ -213,15 +243,12 @@
     if (!congregationHall) return;
     const seats = congregationHall.querySelectorAll('.hall-seat');
     seats.forEach((el, i) => {
-      if (i % 4 !== 0) return;
-      const img = el.querySelector('.devotee-sprite');
-      if (!img) return;
-      const delay = (i % 4) * 80;
-      setTimeout(() => { img.src = SPRITE_FRAMES.forehead; }, delay);
-      setTimeout(() => { img.src = SPRITE_FRAMES.bowMid; }, delay + 140);
-      setTimeout(() => { img.src = SPRITE_FRAMES.prostrateDeep; }, delay + 300);
-      setTimeout(() => { img.src = SPRITE_FRAMES.bowMid; }, delay + 620);
-      setTimeout(() => { img.src = SPRITE_FRAMES.kneel; }, delay + 780);
+      if (i % 3 !== 0) return;
+      const delay = (i % 3) * 90;
+      setTimeout(() => {
+        el.classList.add('seat-bowing');
+        setTimeout(() => el.classList.remove('seat-bowing'), 1100);
+      }, delay);
     });
   }
 
@@ -464,6 +491,40 @@
     }
   }
 
+  function updateDevoteeSkinVisual(username, skin) {
+    if (!username || !skin) return;
+    const targetUrl = getSkinSpriteUrl(skin);
+    const isMaster = skin === 'master';
+
+    const vipSlots = document.querySelectorAll('.vip-devotee-slot');
+    vipSlots.forEach((slot) => {
+      const u = slot.getAttribute('data-user');
+      if (u && (u === username || u.toLowerCase().includes(username.toLowerCase()))) {
+        const img = slot.querySelector('.devotee-sprite');
+        if (img) {
+          img.src = targetUrl;
+          img.classList.toggle('master-glow', isMaster);
+          img.classList.add('skin-changing');
+          setTimeout(() => img.classList.remove('skin-changing'), 900);
+        }
+      }
+    });
+
+    const hallSeats = document.querySelectorAll('.hall-seat');
+    hallSeats.forEach((seat) => {
+      const u = seat.getAttribute('data-user');
+      if (u && (u === username || u.toLowerCase().includes(username.toLowerCase()))) {
+        const img = seat.querySelector('.devotee-sprite');
+        if (img) {
+          img.src = targetUrl;
+          img.classList.toggle('master-glow', isMaster);
+          img.classList.add('skin-changing');
+          setTimeout(() => img.classList.remove('skin-changing'), 900);
+        }
+      }
+    });
+  }
+
   // 7. Xử lý hiệu ứng khi có Nghi Thức mới
   let fortuneTimer = null;
   let grandTimer = null;
@@ -472,10 +533,23 @@
     if (!ev) return;
 
     if (ev.ttsText && ev.type !== 'drawFortune') {
-      audio.enqueueTts(ev.ttsText, { voice: ev.ttsVoice || 'maichi' });
+      audio.enqueueTts(ev.ttsText, { voice: ev.ttsVoice || 'vi-VN-NamMinhNeural' });
     }
 
     switch (ev.type) {
+      case 'skinChange': {
+        audio.playIncenseChime();
+        updateDevoteeSkinVisual(ev.user, ev.skin);
+        updateCentralWorshipper(
+          ev.user,
+          ev.avatar,
+          `✨ Đổi y phục: ${ev.skinLabel || ev.skin}`,
+          `Thí chủ thành tâm đổi y phục trang nghiêm`,
+          true
+        );
+        break;
+      }
+
       case 'burnIncense': {
         audio.playIncenseChime();
         particles.spawnIncenseBurst(540, 895);
@@ -626,10 +700,13 @@
         } else if (msg.method === 'temple.event') {
           if (msg.params?.state) updateUIState(msg.params.state);
           if (msg.params?.event) triggerRitualVisuals(msg.params.event);
+        } else if (msg.method === 'temple.skin') {
+          const { id, skin, user } = msg.params || {};
+          updateDevoteeSkinVisual(user || id, skin);
         } else if (msg.method === 'tts.play') {
           if (msg.params?.url) {
             audio.enqueueTts(msg.params.text || 'Nam mô A Di Đà Phật', {
-              voice: msg.params.voice || 'maichi',
+              voice: msg.params.voice || 'vi-VN-NamMinhNeural',
               url: msg.params.url
             });
           }
@@ -773,6 +850,24 @@
   document.getElementById('btnToggleAutoSim')?.addEventListener('click', () => {
     autoSimState = !autoSimState;
     callRpc('live.setAutoSim', { enabled: autoSimState });
+    const btn = document.getElementById('btnToggleAutoSim');
+    if (btn) btn.textContent = `🤖 Tự động Giả lập Người Xem: ${autoSimState ? 'BẬT' : 'TẮT'}`;
+  });
+
+  document.getElementById('btnFillBots')?.addEventListener('click', () => {
+    callRpc('temple.fillBots', { count: 25 });
+  });
+
+  document.getElementById('btnClearBots')?.addEventListener('click', () => {
+    callRpc('temple.clearBots', {});
+  });
+
+  document.querySelectorAll('.skin-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const skinKeyword = btn.getAttribute('data-skin');
+      const { user } = getFormInput();
+      callRpc('temple.comment', { comment: skinKeyword, user });
+    });
   });
 
   document.getElementById('btnToggleTts')?.addEventListener('click', (e) => {
